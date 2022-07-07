@@ -1,7 +1,7 @@
 <?php
 
 namespace DBSessionStorage\SaveHandler;
-use Zend\Session\SaveHandler\DbTableGateway;
+use Laminas\Session\SaveHandler\DbTableGateway;
 
 class EncodedDbTableGateway extends DbTableGateway{
     
