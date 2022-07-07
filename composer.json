@@ -26,8 +26,8 @@
 		"laminas/laminas-session" : "^2.12.1"
 	},
 	"autoload" : {
-		"psr-0" : {
-			"DBSessionStorage" : "src/"
+		"psr-4" : {
+			"DBSessionStorage\\" : "src/"
 		},
 		"classmap" : [
 			"Module.php"
