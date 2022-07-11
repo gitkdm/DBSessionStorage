@@ -11,26 +11,25 @@
 
 namespace DBSessionStorage;
 
-class Module
-{
+use Laminas\Mvc\MvcEvent;
 
-    public function onBootstrap(\Laminas\Mvc\MvcEvent $e)
-    {
+class Module {
+
+    public function onBootstrap(MvcEvent $e) : void {
         $storage = $e->getApplication()->getServiceManager()->get('DBSessionStorage\Storage\DBStorage');
+
         $storage->setSessionStorage();
-    }
+    }//end of onBootstrap
 
-    public function getConfig()
-    {
-        return include __DIR__ . '/config/module.config.php';
-    }
+    public function getConfig() {
+       return include __DIR__ . '/config/module.config.php';
+    }//end of getConfig
 
-    public function getAutoloaderConfig()
-    {
-        return array(
-            'Laminas\Loader\ClassMapAutoloader' => array(
-                __DIR__ . '/autoload_classmap.php',
-            ),
-        );
-    }
-}
+   /*
+     No longer needed
+     public function getAutoloaderConfig() : array {
+        return ['Laminas\Loader\ClassMapAutoloader' => [__DIR__ . '/autoload_classmap.php']];
+     }
+   */
+
+}//end of Module

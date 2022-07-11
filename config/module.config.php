@@ -7,12 +7,11 @@
  * For the full copyright and license information, please view
  * the file LICENSE.txt that was distributed with this source code.
  */
-return array(
-    'service_manager' => array(
-        'factories' => array(
-            'Laminas\Db\Adapter\Adapter' => 'Laminas\Db\Adapter\AdapterServiceFactory',
-            'DBSessionStorage\Storage\DBStorage' => 'DBSessionStorage\Factory\DBStorageFactory',
-        )
-    ),
-
-);
+return [
+    'service_manager' => [
+        'factories' => [
+            'Laminas\Db\Adapter\Adapter'         => 'Laminas\Db\Adapter\AdapterServiceFactory',
+            'DBSessionStorage\Storage\DBStorage' => 'DBSessionStorage\Factory\DBStorageFactory'
+        ],
+    ],
+];

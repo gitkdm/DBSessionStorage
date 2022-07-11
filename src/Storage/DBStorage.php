@@ -11,6 +11,8 @@
 
 namespace DBSessionStorage\Storage;
 
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Session\Config\SessionConfig;
 use Laminas\Session\SaveHandler\DbTableGateway;
 use Laminas\Session\SaveHandler\DbTableGatewayOptions;
 use DBSessionStorage\SaveHandler\EncodedDbTableGateway;
@@ -18,48 +20,53 @@ use Laminas\Db\Adapter\Adapter;
 use Laminas\Session\SessionManager;
 use Laminas\Session\Container;
 
-class DBStorage
-{
+class DBStorage {
 
-    protected $adapter;
-    protected $tblGW;
+    protected Adapter $adapter;
+    protected TableGateway $tblGW;
     protected $sessionConfig;
     protected $serviceConfig;
 
-    public function __construct(Adapter $adapter, $session_config, $service_config)
-    {
-        $this->adapter = $adapter;
+    public function __construct(Adapter $adapter, $session_config, $service_config) {
+
+        $this->adapter       = $adapter;
         $this->sessionConfig = $session_config;
         $this->serviceConfig = $service_config;
-        $this->tblGW = new \Laminas\Db\TableGateway\TableGateway('sessions', $this->adapter);
-    }
+        $this->tblGW         = new TableGateway('sessions', $this->adapter);
 
-    public function setSessionStorage()
-    {
+    }//end of __construct
+
+    public function setSessionStorage() : void {
+
         $gwOpts = new DbTableGatewayOptions();
+
         $gwOpts->setDataColumn('data');
         $gwOpts->setIdColumn('id');
         $gwOpts->setLifetimeColumn('lifetime');
         $gwOpts->setModifiedColumn('modified');
         $gwOpts->setNameColumn('name');
 
-
-        if(isset($this->serviceConfig['base64Encode']) &&
-                $this->serviceConfig['base64Encode'])
-        {
+        if (isset($this->serviceConfig['base64Encode']) && $this->serviceConfig['base64Encode']) {
             $saveHandler = new EncodedDbTableGateway($this->tblGW, $gwOpts);
-        }
-        else {
+        } else {
             $saveHandler = new DbTableGateway($this->tblGW, $gwOpts);
         }
+
         $sessionManager = new SessionManager();
+
         if ($this->sessionConfig) {
-            $sessionConfig = new \Laminas\Session\Config\SessionConfig();
+            $sessionConfig = new SessionConfig();
+
             $sessionConfig->setOptions($this->sessionConfig);
             $sessionManager->setConfig($sessionConfig);
         }
+
         $sessionManager->setSaveHandler($saveHandler);
+
         Container::setDefaultManager($sessionManager);
+
         $sessionManager->start();
-    }
-}
+
+    }//end of setSessionStorage
+
+}//end of DBStorage

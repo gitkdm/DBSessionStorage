@@ -13,32 +13,32 @@
 
 namespace DBSessionStorage\Factory;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use DBSessionStorage\Storage\DBStorage;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
 
 /*
  * Contributed storage factory by community user https://github.com/acnb
  */
 
-class DBStorageFactory implements FactoryInterface
-{
+class DBStorageFactory implements FactoryInterface {
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $conf = $serviceLocator->get('Config');
-        $config = null;
-        $serviceConfig = null;
-        
-        if (isset($conf['zf2-db-session']) && isset($conf['zf2-db-session']['sessionConfig'])) {
-            $config = $conf['zf2-db-session']['sessionConfig'];
-        }
-        
-        if (isset($conf['zf2-db-session']) && isset($conf['zf2-db-session']['serviceConfig'])) {
-            $serviceConfig = $conf['zf2-db-session']['serviceConfig'];
-        }
-        
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null) : DBStorage {
+
+        $serviceLocator = $container->get(ServiceLocatorInterface::class);
+        $conf           = $serviceLocator->get('Config');
+        $config         = null;
+        $serviceConfig  = null;
+
+        if (isset($conf['zf2-db-session']) && isset($conf['zf2-db-session']['sessionConfig']))  $config = $conf['zf2-db-session']['sessionConfig'];
+
+        if (isset($conf['zf2-db-session']) && isset($conf['zf2-db-session']['serviceConfig'])) $serviceConfig = $conf['zf2-db-session']['serviceConfig'];
+
         $dbAdapter = $serviceLocator->get('\Laminas\Db\Adapter\Adapter');
+
         return new DBStorage($dbAdapter, $config, $serviceConfig);
-    }
-}
+
+    }//end of __invoke
+
+}//end of DBStorageFactory
